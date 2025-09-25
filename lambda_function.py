@@ -9,7 +9,7 @@ from selenium.common.exceptions import TimeoutException
 import smtplib
 from email.mime.text import MIMEText
 
-# SQS client
+# SQS client details
 sqs = boto3.client('sqs')
 RESULT_QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/705707996353/ResultQueue'
 
