@@ -19,13 +19,15 @@ phases:
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"browser-automation","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-      - echo Uploading artifact manually to S3 for debugging...
-      - aws s3 cp imagedefinitions.json s3://codepipeline-us-east-2-9dd6a2df5979-4c27-b56b-f33a7d339a2b/BuildArtifact/imagedefinitions.json
+      - echo '[{"name":"browser-automation","imageUri":"'"$REPOSITORY_URI:$IMAGE_TAG"'"}]' > imagedefinitions.json
+      - echo Copying Lambda code to artifact folder...
+      - mkdir -p lambda_artifact
+      - cp lambda_function.py lambda_artifact/
 
 artifacts:
   files:
     - imagedefinitions.json
-  name: BuildArtifact          # MUST match CodePipeline output artifact name
+    - lambda_artifact/**/*
+  name: BuildArtifact
   base-directory: .
-  discard-paths: yes
+  discard-paths: no
