@@ -24,3 +24,5 @@ phases:
 artifacts:
   files:
     - imagedefinitions.json
+  name: BuildArtifact
+  discard-paths: yes
