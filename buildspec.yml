@@ -6,8 +6,8 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 705707996353.dkr.ecr.us-east-2.amazonaws.com)
-      - REPOSITORY_URI=705707996353.dkr.ecr.us-east-2.amazonaws.com/browser-automation
-      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - export REPOSITORY_URI=705707996353.dkr.ecr.us-east-2.amazonaws.com/browser-automation
+      - export IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo REPOSITORY_URI=$REPOSITORY_URI
       - echo IMAGE_TAG=$IMAGE_TAG
 
