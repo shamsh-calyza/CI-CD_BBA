@@ -13,7 +13,7 @@ from email.mime.text import MIMEText
 sqs = boto3.client('sqs')
 RESULT_QUEUE_URL = 'https://sqs.us-east-2.amazonaws.com/705707996353/ResultQueue'
 
-# --- Gmail function ---
+# --- Gmail function -----
 def send_email(products):
     sender_email = "shamshkhan601@gmail.com"
     app_password = "nurn dojh wqiz mupr"
