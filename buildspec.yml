@@ -1,4 +1,5 @@
 version: 0.2
+
 phases:
   pre_build:
     commands:
@@ -7,20 +8,30 @@ phases:
       - $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 705707996353.dkr.ecr.us-east-2.amazonaws.com)
       - REPOSITORY_URI=705707996353.dkr.ecr.us-east-2.amazonaws.com/browser-automation
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo REPOSITORY_URI=$REPOSITORY_URI
+      - echo IMAGE_TAG=$IMAGE_TAG
+
   build:
     commands:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+
   post_build:
     commands:
       - echo Pushing the Docker image to ECR...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - echo Writing image definitions file...
       - echo '[{"name":"browser-automation","imageUri":"'"$REPOSITORY_URI:$IMAGE_TAG"'"}]' > imagedefinitions.json
+      - echo Contents of imagedefinitions.json:
+      - cat imagedefinitions.json
       - echo Copying Lambda code to artifact folder...
       - mkdir -p lambda_artifact
-      - cp lambda_function.py lambda_artifact/
+      - test -f lambda_function.py && cp lambda_function.py lambda_artifact/ || echo "lambda_function.py not found, skipping copy."
+
 artifacts:
   files:
     - imagedefinitions.json
     - lambda_artifact/**/*
+  name: BuildArtifact
+  base-directory: .
+  discard-paths: no
